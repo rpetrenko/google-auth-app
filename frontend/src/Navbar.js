@@ -29,11 +29,11 @@ function Navbar({ user, onLogout }) {
 
   // Use cached image if available
   const cachedImage = localStorage.getItem(`profile_picture_${user.email}`);
-  const profileImage = cachedImage || user.picture || '/iconds8-no-picture-48.png';
+  const profileImage = cachedImage || user.picture || '/icons8-no-picture-48.png';
 
   const handleImageError = (e) => {
     console.error('Profile picture failed to load:', user.picture);
-    e.target.src = '/iconds8-no-picture-48.png';
+    e.target.src = '/icons8-no-picture-48.png';
   };
 
   return (

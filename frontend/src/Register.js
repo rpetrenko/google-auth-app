@@ -8,6 +8,7 @@ function Register() {
   const [password, setPassword] = useState('');
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();

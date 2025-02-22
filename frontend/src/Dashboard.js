@@ -15,7 +15,7 @@ function Dashboard({ user, onLogout }) {
         <p>Welcome to your dashboard, {user.username}!</p>
         <p>Email: {user.email}</p>
         <img
-          src={user.picture || '/iconds8-no-picture-48.png'}
+          src={user.picture || '/icons8-no-picture-48.png'}
           alt="Profile"
           className="dashboard-profile-pic"
         />
