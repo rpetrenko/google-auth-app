@@ -152,6 +152,14 @@
     text-align: center;
   }
 
+  .error-message {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #d32f2f; /* Red for errors */
+    margin-top: 10px;
+    text-align: center;
+  }
+  
 /* Navbar Styles */
 .navbar {
     position: fixed;

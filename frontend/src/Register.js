@@ -8,7 +8,6 @@ function Register() {
   const [password, setPassword] = useState('');
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [message, setMessage] = useState('');
-  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -23,8 +22,12 @@ function Register() {
       const data = await response.json();
       if (response.ok) {
         setIsEmailSent(true);
-        setMessage('Check your email for a verification link.');
-        setTimeout(() => navigate('/'), 3000); // redirect to home after 3 secs
+        setMessage('Check your email for a verification link. Redirecting to login...');
+        setTimeout(() => {
+          navigate('/');
+        }, 5000
+        );
+
       } else {
         setMessage(data.detail || 'Registration failed.');
       }
@@ -66,6 +69,7 @@ function Register() {
                 Sign Up
               </button>
             </form>
+            {message && <p className="error-message">{message}</p>} {/* Display error here */}
             <p>
               Already have an account? <a href="/">Log in</a>
             </p>
