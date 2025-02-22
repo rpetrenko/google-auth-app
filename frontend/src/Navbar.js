@@ -1,12 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './App.css';
 
 function Navbar({ user, onLogout }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const menuRef = useRef(null);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleClickOutside = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    // Add event listener when dropdown is open
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    // Cleanup listener when dropdown closes or component unmounts
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropdownOpen]); // Re-run effect when isDropdownOpen changes
+
+  // Use cached image if available
+  const cachedImage = localStorage.getItem(`profile_picture_${user.email}`);
+  const profileImage = cachedImage || user.picture || '/iconds8-no-picture-48.png';
+
+  const handleImageError = (e) => {
+    console.error('Profile picture failed to load:', user.picture);
+    e.target.src = '/iconds8-no-picture-48.png';
   };
 
   return (
@@ -16,14 +43,20 @@ function Navbar({ user, onLogout }) {
       </div>
       <div className="navbar-right">
         {user && (
-          <div className="user-menu">
+          <div className="user-menu" ref={menuRef}>
             <button className="user-menu-button" onClick={toggleDropdown}>
               <img
-                src={user.picture || 'https://via.placeholder.com/30'}
+                src={profileImage}
                 alt="User"
                 className="user-picture"
+                onError={handleImageError}
+                onLoad={(e) => {
+                  if (!cachedImage && user.picture) {
+                    localStorage.setItem(`profile_picture_${user.email}`, user.picture);
+                  }
+                }}
               />
-              <span className="username">{user.username} ...</span>
+              <span className="username">{user.username}</span>
             </button>
             {isDropdownOpen && (
               <div className="dropdown">
