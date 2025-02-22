@@ -83,7 +83,7 @@ function Login({ setUser }) {
               alt="Google logo"
               className="google-icon"
             />
-            Sign in with Google
+            Continue with Google
           </button>
           <form className="local-login-form" onSubmit={handleLocalLogin}>
             <input
