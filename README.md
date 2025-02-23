@@ -34,3 +34,9 @@ docker-compose down --volumes
 curl -X POST "http://localhost:8000/register" \
 -H "Content-Type: application/json" \
 -d '{"username": "testuser", "email": "test@example.com", "password": "password123"}'
+
+# Run tests
+docker compose build
+docker-compose up -d db_test
+docker-compose run --rm backend_test
+docker-compose stop db_test
