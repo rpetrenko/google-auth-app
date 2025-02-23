@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  test-backend:
     runs-on: ubuntu-latest
     steps:
       # Checkout the repository
@@ -23,7 +23,7 @@ jobs:
         run: |
           echo "${{ secrets.DOT_ENV }}" > .env
           echo "Created .env from DOT_ENV secret"
-          
+
       # Build backend_test image
       - name: Build backend_test image
         run: |
