@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { act } from 'react'; // Added
 import App from '../App';
 
 console.log('Starting App.test.js');
@@ -7,7 +8,10 @@ console.log('Starting App.test.js');
 describe('App', () => {
   test('renders login page and switches to register', () => {
     console.log('Rendering App');
-    const { container } = render(<App />);
+    let container;
+    act(() => {
+      ({ container } = render(<App />));
+    });
     console.log('App rendered, checking DOM:', container.innerHTML);
 
     console.log('Looking for Login heading');

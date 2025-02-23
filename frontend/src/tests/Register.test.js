@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { act } from 'react'; // Added
 import { MemoryRouter } from 'react-router-dom';
 import Register from '../Register';
 
@@ -16,11 +17,14 @@ describe('Register', () => {
       json: async () => ({ message: 'Check your email for a verification link.' }),
     });
 
-    render(
-      <MemoryRouter>
-        <Register />
-      </MemoryRouter>
-    );
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <Register />
+        </MemoryRouter>
+      );
+    });
+
     fireEvent.change(screen.getByPlaceholderText('Username'), { target: { value: 'testuser' } });
     fireEvent.change(screen.getByPlaceholderText('Email'), { target: { value: 'test@example.com' } });
     fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'password123' } });
@@ -37,11 +41,14 @@ describe('Register', () => {
       json: async () => ({ detail: 'Email already registered' }),
     });
 
-    render(
-      <MemoryRouter>
-        <Register />
-      </MemoryRouter>
-    );
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <Register />
+        </MemoryRouter>
+      );
+    });
+
     fireEvent.change(screen.getByPlaceholderText('Username'), { target: { value: 'testuser' } });
     fireEvent.change(screen.getByPlaceholderText('Email'), { target: { value: 'test@example.com' } });
     fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'password123' } });

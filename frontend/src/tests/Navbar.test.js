@@ -1,5 +1,6 @@
-import '@testing-library/jest-dom'; // Added for toBeInTheDocument
+import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { act } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import Navbar from '../Navbar';
 
@@ -8,11 +9,13 @@ describe('Navbar', () => {
   const onLogout = jest.fn();
 
   test('renders user info and dropdown', () => {
-    render(
-      <MemoryRouter>
-        <Navbar user={user} onLogout={onLogout} />
-      </MemoryRouter>
-    );
+    act(() => {
+      render(
+        <MemoryRouter>
+          <Navbar user={user} onLogout={onLogout} />
+        </MemoryRouter>
+      );
+    });
     expect(screen.getByText('testuser')).toBeInTheDocument();
     expect(screen.getByAltText('User')).toHaveAttribute('src', 'test.jpg');
 
