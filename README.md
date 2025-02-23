@@ -28,12 +28,12 @@ EMAIL_PASSWORD=<app password>
 ```docker-compose up --build
 ```
 
-# remove all, including volumes
+* remove all, including volumes
 ```
 docker-compose down --volumes
 ```
 
-# populate users in DB
+* populate users in DB
 ```
 curl -X POST "http://localhost:8000/register" \
 -H "Content-Type: application/json" \
@@ -50,4 +50,17 @@ docker compose build
 docker-compose up -d db_test
 docker-compose run --rm backend_test
 docker-compose stop db_test
+```
+
+* run frontend tests
+```
+docker compose run --rm frontend_test
+```
+or test locally
+```
+npm run test
+```
+run a single test
+```
+npm run test -- src/tests/App.test.js
 ```

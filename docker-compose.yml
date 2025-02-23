@@ -21,6 +21,12 @@ services:
     env_file:
       - .env
 
+  frontend_test:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    command: npm run test:ci
+    
   db:
     image: postgres:13
     environment:
