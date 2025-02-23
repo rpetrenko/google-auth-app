@@ -2,10 +2,7 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.database import Base, get_db
-from app.main import app
 import os
-from dotenv import load_dotenv
 from unittest.mock import MagicMock
 import asyncio
 import logging
@@ -14,11 +11,13 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-# Load environment variables for testing
-load_dotenv()
 
 # Use the test database on db_test service
-TEST_DATABASE_URL = os.getenv("DATABASE_URL")
+POSTGRES_USER = os.getenv('POSTGRES_USER')
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+POSTGRES_DB = os.getenv('POSTGRES_DB')
+TEST_DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@db_test:5432/{POSTGRES_DB}"
+os.environ["DATABASE_URL"] = TEST_DATABASE_URL
 
 # Create engine and session for testing
 engine = create_engine(TEST_DATABASE_URL)
@@ -35,10 +34,15 @@ def override_get_db():
             db.close()
     return _get_db
 
+
 # Create a test client with overridden DB
 @pytest.fixture(scope="function")
 def client(override_get_db):
     logger.debug("Creating tables for test")
+
+    from app.database import Base, get_db
+    from app.main import app
+    
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     app.dependency_overrides[get_db] = override_get_db
@@ -67,7 +71,7 @@ def client(override_get_db):
         cursor = conn.cursor()
         cursor.execute("SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = 'google_auth_db_test' AND pid <> pg_backend_pid();")
         conn.close()
-        
+
     logger.debug("Drop all tables")
     Base.metadata.drop_all(bind=engine)
     logger.debug("Get event loop")
@@ -86,19 +90,6 @@ def client(override_get_db):
     loop.close()
     logger.debug("Test client cleanup complete")
 
-# Override environment variables for testing
-@pytest.fixture(autouse=True)
-def set_env():
-    os.environ["DATABASE_URL"] = TEST_DATABASE_URL
-    os.environ["GOOGLE_CLIENT_ID"] = "test-client-id"
-    os.environ["GOOGLE_CLIENT_SECRET"] = "test-client-secret"
-    os.environ["GOOGLE_REDIRECT_URI"] = "http://localhost:8000/auth/google/callback"
-    os.environ["SECRET_KEY"] = "test-secret-key"
-    os.environ["EMAIL_HOST"] = "smtp.gmail.com"
-    os.environ["EMAIL_PORT"] = "587"
-    os.environ["EMAIL_USER"] = "test@example.com"
-    os.environ["EMAIL_PASSWORD"] = "test-password"
-    os.environ["REACT_APP_URL"] = "http://localhost:3000"
 
 # Mock smtplib.SMTP for email sending
 @pytest.fixture(scope="function")
