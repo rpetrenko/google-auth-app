@@ -16,6 +16,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # Dump DOT_ENV secret to .env file
+      - name: Create .env from secret
+        run: |
+          echo "${{ secrets.DOT_ENV }}" > .env
+          echo "Created .env from DOT_ENV secret"
+
       - name: Build frontend_test image
         run: |
           docker compose build frontend_test
